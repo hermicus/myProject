@@ -1,20 +1,14 @@
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
-import ssl
+import yfinance as yf
+import sqlite3
 
-# Ignore SSL certificate errors
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+conn = sqlite3.connect('mytable1.sqlite')
+cur = conn.cursor()
 
-url = ""
-html = urlopen(url, context=ctx).read()
-soup = BeautifulSoup(html, "html.parser")
+cur.execute('DROP TABLE IF EXISTS Date')
 
-# Retrieve all of the anchor tags
-tags = soup('td')
-for tag in tags:
-    # Look at the parts of a tag
-    # print('TAG:', tag)
-    #print('URL:', tag.get('href', None))
-    print(tag.contents[0])
+
+
+dat = yf.Ticker("RYSAS.IS")
+splitData = dat.history(start="2025-01-01", end="2025-12-31")
+print(splitData)
+
