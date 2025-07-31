@@ -1,1 +1,1 @@
-Test
+First project to fetch turkish stocks and convert them to CHF
