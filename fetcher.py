@@ -1,6 +1,7 @@
 import yfinance as yf
 import sqlite3
 import json
+import datetime
 
 from websockets import Close
 
@@ -35,7 +36,7 @@ CREATE TABLE "prices" (
 ''')
 
 conn.commit()
-
+today = datetime.datetime.today().date()
 #Adding base data for the fetching
 
 cur.executescript('''INSERT OR IGNORE INTO stocks ( ticker ) VALUES ("RYSAS.IS"),("RYGYO.IS");
@@ -50,7 +51,7 @@ temp_list = cur.execute('SELECT ticker, id FROM stocks').fetchall()
 for row in temp_list:
 	stock_id = row[1]
 	dat = yf.Ticker(str(row[0]))
-	fname = dat.history(start="2025-01-01", end="2025-08-01", auto_adjust=False)
+	fname = dat.history(start="2025-01-01", end=str(today), auto_adjust=False)
 	rawData = fname.to_json()
 	jsonData = json.loads(rawData)
 
@@ -63,4 +64,5 @@ for row in temp_list:
 
 cur.close()
 
+#def my_converter(ticker, target_curency)
 
