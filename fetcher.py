@@ -55,15 +55,16 @@ for row in temp_list:
     strData = fname.to_json()
     jsonData = json.loads(strData)
 
+# loop through json to add to mysql
 
 for key, value in jsonData["Adj Close"].items():
 	print(key, value)
-	sql = "INSERT INTO prices (close_price, date) VALUES (:value, :key)"
-	cur.execute(sql, jsonData)
+	sql = "INSERT or IGNORE INTO prices (close_price, date) VALUES (?, ?)"
+	cur.execute(sql, (value, key))
+	conn.commit()
 
-conn.commit()
+
 
 cur.close()
 
-# Changing date to list and then adding to DB + whiling through the values
-# Or somehow using items to update SQL ?
+
