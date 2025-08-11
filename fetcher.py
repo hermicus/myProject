@@ -15,15 +15,15 @@ DROP TABLE IF EXISTS prices;
 
 CREATE TABLE "currency" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"Currency"	TEXT NOT NULL,
+	"currency"	TEXT NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 CREATE TABLE "stocks" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"ticker"	TEXT NOT NULL,
-	"basis_currency_id"	integer NOT NULL,
-	PRIMARY KEY("id")
+	"base_currency_id"	integer NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 CREATE TABLE "prices" (
@@ -40,19 +40,26 @@ conn.commit()
 
 #Adding base data for the fetching
 
-cur.execute('''INSERT OR IGNORE INTO User (name)
-        VALUES ( ? )''', ( name, ) )
+cur.executescript('''INSERT OR IGNORE INTO stocks (ticker, base_currency_id) VALUES ("RYSAS.IS", 1);
+
+INSERT OR IGNORE INTO currency (currency) VALUES ("TRY");
+''')
+
+conn.commit()
 
 
 temp_list = cur.execute('SELECT ticker FROM stocks')
 for row in temp_list:
     dat = yf.Ticker(str(row[0]))
-    fname = dat.history(start="2025-01-01", end="2025-01-31")
+    fname = dat.history(start="2025-01-01", end="2025-01-31", auto_adjust=False)
     strData = fname.to_json()
     jsonData = json.loads(strData)
-    for entry in jsonData.items()["Close"]:
-        CloseData = entry[0:]
-        print(CloseData)
+
+
+for key, value in jsonData["Adj Close"].items():
+	print(key, value)
+	sql = "INSERT INTO prices (close_price, date) VALUES (:value, :key)"
+	cur.execute(sql, jsonData)
 
 conn.commit()
 
