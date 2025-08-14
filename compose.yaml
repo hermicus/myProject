@@ -1,6 +1,6 @@
 services:
   database:
-    image: mysql:lts
+    image: mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
