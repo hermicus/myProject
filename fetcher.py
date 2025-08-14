@@ -2,7 +2,6 @@ import yfinance as yf
 import sqlite3
 import json
 import datetime
-from crontab import CronTab
 
 from websockets import Close
 
