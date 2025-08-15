@@ -9,11 +9,12 @@ user="admin",
 password="admin",
 database="db_name"
 )
+cur = conn.cursor()
 
-#Dumping and creating fresh tables for testing purposes
+
 today = datetime.datetime.today().date()
 
-cur = conn.cursor()
+
 
 
 
